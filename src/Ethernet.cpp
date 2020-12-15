@@ -84,9 +84,12 @@ void EthernetClass::begin(uint8_t *mac, IPAddress ip, IPAddress dns, IPAddress g
 	SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
 	W5100.setMACAddress(mac);
 #if ARDUINO > 106 || TEENSYDUINO > 121
-	W5100.setIPAddress(ip._address.bytes);
-	W5100.setGatewayIp(gateway._address.bytes);
-	W5100.setSubnetMask(subnet._address.bytes);
+// 	W5100.setIPAddress(ip._address.bytes);
+// 	W5100.setGatewayIp(gateway._address.bytes); the bug that we found during the first meeting no object with this name "_address"
+// 	W5100.setSubnetMask(subnet._address.bytes);
+	W5100.setIPAddress((uint8_t *)&ip.v4());
+	W5100.setGatewayIp((uint8_t *)&gateway.v4());
+	W5100.setSubnetMask((uint8_t *)&subnet.v4()); 
 #else
 	W5100.setIPAddress(ip._address);
 	W5100.setGatewayIp(gateway._address);
